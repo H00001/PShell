@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -5,17 +6,17 @@
 #include <sys/wait.h>
 #include <sys/prctl.h>
 #include "show.h"
+#include "./internal/command.h"
 #define PS_NAME "PShell-Fork"
 void register_env();
 void func_signal(int s);
 int main(){
 	register_env();
 	char buf[20];
-	char dir[40];
 	while (1){
-		char *d = getcwd(dir,40);
-		SHOWGREEN(d);
+		SHOWGREEN(get_current_dir_name());
 		buf[strlen(fgets(buf,20,stdin))-1] = 0;
+		compare(buf);
 		pid_t p;
 		if((p=fork())==0){
 			prctl(PR_SET_NAME, PS_NAME, NULL, NULL, NULL);

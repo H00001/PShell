@@ -1,6 +1,6 @@
 #this is a makefile file
 pshell:
-	$(CC) *.c -o pshell
+	$(CC) *.c ./internal/*.c -o pshell
 install:
 	cp ./pshell /bin/pshell
 clean:
