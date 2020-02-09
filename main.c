@@ -8,6 +8,7 @@
 #include <sys/wait.h>
 #include <sys/prctl.h>
 #include "show.h"
+#include "./util/spilt.h"
 #include "./internal/command.h"
 #define PS_NAME "PShell-Fork"
 void register_env();
@@ -15,15 +16,17 @@ void func_signal(int s);
 int main(){
 	register_env();
 	char buf[BUFFERLEN];
-	int next = 0;
+	int next = 1;
 	while (1){
 		show(get_current_dir_name(),next);
 		buf[strlen(fgets(buf,BUFFERLEN,stdin))-1] = 0;
+		struct param* c= spilt(buf);
+		//printf("call:%s,param:%s,%s\n",c->call,c->params[0],c->params[1]);
 		compare(buf);
 		pid_t p;
 		if((p=fork())==0){
 			prctl(PR_SET_NAME, PS_NAME, NULL, NULL, NULL);
-			exit(execlp(buf,buf,NULL));
+			exit(execvp(c->call,c->params));
 		}
 		else{
 			int result;
