@@ -1,4 +1,6 @@
 #define _GNU_SOURCE
+#define _GUNPLAN_TOP_
+#define BUFFERLEN 40
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -12,24 +14,21 @@ void register_env();
 void func_signal(int s);
 int main(){
 	register_env();
-	char buf[20];
+	char buf[BUFFERLEN];
+	int next = 0;
 	while (1){
-		SHOWGREEN(get_current_dir_name());
-		buf[strlen(fgets(buf,20,stdin))-1] = 0;
+		show(get_current_dir_name(),next);
+		buf[strlen(fgets(buf,BUFFERLEN,stdin))-1] = 0;
 		compare(buf);
 		pid_t p;
 		if((p=fork())==0){
 			prctl(PR_SET_NAME, PS_NAME, NULL, NULL, NULL);
-			execlp(buf,buf,NULL);
+			exit(execlp(buf,buf,NULL));
 		}
 		else{
 			int result;
 			waitpid(p,&result,0);
-			if (WIFEXITED(result)) {
-				printf("cc");
-			}else{
-				printf("cd");
-			}
+			next = WIFEXITED(result);
 		}
 	}
 }
@@ -39,6 +38,6 @@ void register_env(){
 }
 
 void func_signal(int s){
-	
+	exit(2);	
 }
 
