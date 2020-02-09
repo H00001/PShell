@@ -21,8 +21,9 @@ int main(){
 		show(get_current_dir_name(),next);
 		buf[strlen(fgets(buf,BUFFERLEN,stdin))-1] = 0;
 		struct param* c= spilt(buf);
-		//printf("call:%s,param:%s,%s\n",c->call,c->params[0],c->params[1]);
-		compare(buf);
+		if(compare(c->call,c->params)){
+			continue;
+		}
 		pid_t p;
 		if((p=fork())==0){
 			prctl(PR_SET_NAME, PS_NAME, NULL, NULL, NULL);

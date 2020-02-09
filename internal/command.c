@@ -1,18 +1,24 @@
 #include "command.h"
 #define ICALL 2
+#define HOME "/home/frank"
 struct command_ command_table[] = {{"exit",__exit},{"cd",cd}};
 
-void cd(int argc,char *argv){
+void cd(char *argv[]){
+	if(chdir(argv[1]?argv[1]:HOME)){
+		printf("%d",errno);
+	}
 }
 
-void __exit(int argc,char *argv){
+void __exit(char *argv[]){
 	exit(0);
 }
 
-void compare(const char *call){
-	for(int i = 0;i<1;i++){
+int compare(const char *call,char *argv[]){
+	for(int i = 0;i<ICALL;i++){
 		if(!strcmp(command_table[i].name,call)){
-			command_table[i].p(0,NULL);
+			command_table[i].p(argv);
+			return 1;
 		}
 	}
+	return 0;
 }
