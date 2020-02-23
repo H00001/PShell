@@ -7,6 +7,7 @@
 
 void __exit(char * argv[]);
 void cd(char * argv[]);
+void su(char * argv[]);
 int compare(const char *call,char * argv[]);
 struct command_ {
 	char *name;

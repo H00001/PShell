@@ -32,7 +32,7 @@ int main(){
 		else{
 			int result;
 			waitpid(p,&result,0);
-			next = WIFEXITED(result);
+			next = !WEXITSTATUS(result);
 		}
 	}
 }
